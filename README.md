@@ -8,7 +8,8 @@ Single-file static landing page for CookCloud (the meal-planning SaaS that's cur
 - Full shipped-feature list (vs. roadmap items that never got built)
 - The real tech stack (Django, Postgres, Redis, Celery, Channels, Stripe, OpenAI, Spoonacular, AbacusAI) — goes deeper than the [original launch article](https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/), which only covered the AI coding tools used to build it
 - An honest breakdown of why it got shut down (infrastructure cost, not lack of users)
-- An EmailOctopus signup for anyone who wants to know if/when it relaunches
+- An EmailOctopus signup for anyone who wants to know if/when it relaunched
+- Hosted at [cookcloud.me](https://cookcloud.me)
 
 ## Deploy
 
