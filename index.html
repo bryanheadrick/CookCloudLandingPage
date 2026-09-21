@@ -1,851 +1,1004 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CookCloud — a recipe app that shipped, but revenue never took off</title>
-<meta name="description" content="CookCloud was a full meal-planning SaaS platform — search, import, plan, shop, track. It worked. Here's the full feature list, the real tech stack, an honest look at why revenue never got off the ground, and a list to join if it comes back.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-
-:root {
-  --primary: #4caf50;
-  --primary-deep: #388e3c;
-  --primary-tint: #e8f5e9;
-  --secondary: #ff9800;
-  --secondary-deep: #e07c00;
-  --accent: #2196f3;
-  --accent-deep: #1976d2;
-  --bg: #f5f5f5;
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --line: #e0e0e0;
-  --text: #333333;
-  --text-soft: #666666;
-  --shadow: 210 10% 15%;
-  --heading: 'Montserrat', -apple-system, 'Segoe UI', sans-serif;
-  --body: 'Open Sans', -apple-system, 'Segoe UI', sans-serif;
-  --ui: 'Lato', -apple-system, 'Segoe UI', sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --primary: #66bb6a;
-    --primary-deep: #81c784;
-    --primary-tint: #1b2e1c;
-    --secondary: #ffa726;
-    --secondary-deep: #ffb74d;
-    --accent: #42a5f5;
-    --accent-deep: #64b5f6;
-    --bg: #1a1a1a;
-    --surface: #232323;
-    --surface-raised: #272727;
-    --line: #3a3a3a;
-    --text: #ededed;
-    --text-soft: #a8a8a8;
-    --shadow: 0 0% 0%;
-  }
-}
-
-:root[data-theme="dark"] {
-  --primary: #66bb6a;
-  --primary-deep: #81c784;
-  --primary-tint: #1b2e1c;
-  --secondary: #ffa726;
-  --secondary-deep: #ffb74d;
-  --accent: #42a5f5;
-  --accent-deep: #64b5f6;
-  --bg: #1a1a1a;
-  --surface: #232323;
-  --surface-raised: #272727;
-  --line: #3a3a3a;
-  --text: #ededed;
-  --text-soft: #a8a8a8;
-  --shadow: 0 0% 0%;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 17px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
-
-a { color: inherit; }
-
-.wrap {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-.prose-wrap {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-/* ---------- Nav ---------- */
-
-nav.top {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-}
-
-nav.top .wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--heading);
-  font-weight: 800;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  color: var(--text);
-}
-
-.brand svg { width: 28px; height: 28px; flex-shrink: 0; color: var(--primary); }
-
-.brand .tag {
-  font-family: var(--ui);
-  font-weight: 600;
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  border-left: 1px solid var(--line);
-  padding-left: 10px;
-  margin-left: 2px;
-}
-
-@media (max-width: 640px) {
-  .brand .tag { display: none; }
-}
-
-.nav-links {
-  display: flex;
-  gap: 28px;
-  font-size: 0.92rem;
-  color: var(--text-soft);
-}
-
-.nav-links a { text-decoration: none; }
-.nav-links a:hover { color: var(--secondary-deep); }
-
-@media (max-width: 640px) {
-  .nav-links { display: none; }
-}
-
-/* ---------- Hero ---------- */
-
-.hero {
-  padding: 76px 0 64px;
-  position: relative;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--ui);
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--secondary-deep);
-  background: color-mix(in srgb, var(--secondary) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent);
-  padding: 5px 12px 5px 10px;
-  border-radius: 100px;
-  margin-bottom: 26px;
-}
-
-.eyebrow .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--secondary);
-}
-
-.slogan {
-  font-family: var(--ui);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--primary-deep);
-  margin: 0 0 14px;
-}
-
-.slogan .sep {
-  color: var(--line);
-  margin: 0 6px;
-}
-
-h1.headline {
-  font-family: var(--heading);
-  font-weight: 800;
-  font-size: clamp(2.3rem, 5vw, 3.8rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin: 0 0 22px;
-  max-width: 16ch;
-  text-wrap: balance;
-}
-
-h1.headline em {
-  font-style: normal;
-  color: var(--primary-deep);
-}
-
-.dek {
-  font-size: 1.2rem;
-  color: var(--text-soft);
-  max-width: 52ch;
-  margin: 0 0 36px;
-  text-wrap: pretty;
-}
-
-.hero-ctas {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 24px;
-  border-radius: 8px;
-  font-size: 0.96rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.btn:hover { transform: translateY(-1px); }
-
-.btn-primary {
-  background: var(--primary);
-  color: #ffffff;
-}
-.btn-primary:hover { background: var(--primary-deep); box-shadow: 0 8px 20px -8px hsl(var(--shadow) / 0.5); }
-
-.btn-ghost {
-  background: transparent;
-  border-color: var(--line);
-  color: var(--text);
-}
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent-deep); }
-
-/* ---------- Video ---------- */
-
-.video-frame {
-  margin-top: 56px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 3px solid var(--surface);
-  box-shadow: 0 24px 60px -30px hsl(var(--shadow) / 0.45), 0 0 0 1px var(--line);
-  background: #000;
-  aspect-ratio: 16/9;
-  position: relative;
-}
-
-.video-frame iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
-
-/* ---------- Section scaffolding ---------- */
-
-section { padding: 84px 0; }
-
-.section-border-top { border-top: 1px solid var(--line); }
-
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 44px;
-  flex-wrap: wrap;
-}
-
-.section-num {
-  font-family: var(--ui);
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--primary-deep);
-}
-
-h2.section-title {
-  font-family: var(--heading);
-  font-weight: 700;
-  font-size: clamp(1.7rem, 3vw, 2.3rem);
-  letter-spacing: -0.01em;
-  margin: 6px 0 0;
-  text-wrap: balance;
-}
-
-.section-lede {
-  font-size: 1.05rem;
-  color: var(--text-soft);
-  max-width: 62ch;
-  margin: 0 0 40px;
-}
-
-/* ---------- Menu / features ---------- */
-
-.menu {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  border-top: 1px solid var(--line);
-}
-
-.menu-item {
-  display: grid;
-  grid-template-columns: 32px 1fr auto;
-  gap: 18px;
-  align-items: start;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.menu-item .icon {
-  width: 30px; height: 30px;
-  color: var(--secondary-deep);
-  margin-top: 2px;
-}
-
-.menu-item .icon svg { width: 100%; height: 100%; }
-
-.menu-item h3 {
-  font-size: 1.05rem;
-  font-weight: 650;
-  margin: 0 0 4px;
-}
-
-.menu-item p {
-  margin: 0;
-  color: var(--text-soft);
-  font-size: 0.96rem;
-  max-width: 56ch;
-}
-
-.menu-tag {
-  font-family: var(--ui);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 14%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
-  padding: 4px 9px;
-  border-radius: 5px;
-  white-space: nowrap;
-  align-self: center;
-}
-
-.menu-tag.roadmap {
-  color: var(--text-soft);
-  background: transparent;
-  border-color: var(--line);
-}
-
-@media (max-width: 600px) {
-  .menu-item { grid-template-columns: 26px 1fr; }
-  .menu-tag { grid-column: 2; margin-top: 6px; justify-self: start; }
-}
-
-/* ---------- Stack / ingredients ---------- */
-
-.stack-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-@media (max-width: 720px) {
-  .stack-grid { grid-template-columns: 1fr; }
-}
-
-.stack-cell {
-  background: var(--surface-raised);
-  padding: 26px 28px;
-}
-
-.stack-cell h4 {
-  font-family: var(--ui);
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--secondary-deep);
-  margin: 0 0 14px;
-}
-
-.stack-list {
-  list-style: none;
-  margin: 0; padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.stack-list li {
-  font-family: var(--ui);
-  font-size: 0.9rem;
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  color: var(--text);
-}
-
-.stack-list .role {
-  color: var(--text-soft);
-  font-family: var(--body);
-  font-size: 0.86rem;
-}
-
-.stack-note {
-  margin-top: 40px;
-  padding: 20px 24px;
-  border-left: 3px solid var(--accent);
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-radius: 0 8px 8px 0;
-  font-size: 0.96rem;
-  color: var(--text-soft);
-}
-
-.stack-note strong { color: var(--text); }
-
-/* ---------- Postmortem ---------- */
-
-.tab {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 8px 0;
-}
-
-.check {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 20px;
-  padding: 14px 28px;
-  border-bottom: 1px dashed var(--line);
-  font-family: var(--ui);
-  font-size: 0.92rem;
-}
-
-.check:last-of-type { border-bottom: none; }
-
-.check .item { color: var(--text-soft); }
-.check .cost { color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
-
-.check.total {
-  padding-top: 20px;
-  border-top: 2px solid var(--text);
-  border-bottom: none;
-  font-weight: 700;
-  font-size: 1.02rem;
-}
-
-.check.total .cost { color: var(--accent); }
-
-.postmortem-copy {
-  margin-top: 40px;
-  font-size: 1.02rem;
-  color: var(--text-soft);
-}
-
-.postmortem-copy p { margin: 0 0 18px; }
-.postmortem-copy strong { color: var(--text); }
-
-/* ---------- Capture ---------- */
-
-.capture-section {
-  background: var(--primary-deep);
-  color: #ffffff;
-  border-radius: 20px;
-  padding: 64px 48px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .capture-section { padding: 48px 24px; }
-}
-
-.capture-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(600px 300px at 20% -10%, color-mix(in srgb, var(--secondary) 30%, transparent), transparent),
-    radial-gradient(500px 260px at 90% 110%, color-mix(in srgb, var(--accent) 24%, transparent), transparent);
-  pointer-events: none;
-}
-
-.capture-inner { position: relative; }
-
-.capture-section .eyebrow {
-  background: color-mix(in srgb, #ffffff 18%, transparent);
-  border-color: color-mix(in srgb, #ffffff 35%, transparent);
-  color: #ffffff;
-}
-.capture-section .eyebrow .dot { background: var(--secondary); }
-
-.capture-section h2 {
-  font-family: var(--heading);
-  font-weight: 700;
-  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
-  margin: 22px 0 14px;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-  color: #ffffff;
-}
-
-.capture-section .sub {
-  color: color-mix(in srgb, #ffffff 82%, transparent);
-  max-width: 46ch;
-  margin: 0 auto 36px;
-  font-size: 1.02rem;
-}
-
-.fine-print {
-  margin: 18px 0 0;
-  font-size: 0.82rem;
-  color: color-mix(in srgb, #ffffff 62%, transparent);
-}
-
-.fine-print a {
-  color: color-mix(in srgb, #ffffff 85%, transparent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.fine-print a:hover { color: #ffffff; }
-
-.eo-form-shell {
-  max-width: 420px;
-  margin: 0 auto;
-  color: var(--text);
-}
-
-.eo-form-shell :is(input, button) {
-  font-family: var(--body);
-}
-
-/* ---------- Footer ---------- */
-
-footer {
-  padding: 48px 0 64px;
-  border-top: 1px solid var(--line);
-  color: var(--text-soft);
-  font-size: 0.9rem;
-}
-
-footer .wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-footer a { text-decoration: underline; text-underline-offset: 3px; }
-footer a:hover { color: var(--secondary-deep); }
-
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CookCloud — a recipe app that shipped, but revenue never took off</title>
+  <meta name="description"
+    content="CookCloud was a full meal-planning SaaS platform — search, import, plan, shop, track. It worked. Here's the full feature list, the real tech stack, an honest look at why revenue never got off the ground, and a list to join if it comes back.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&family=Lato:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4caf50;
+      --primary-deep: #388e3c;
+      --primary-tint: #e8f5e9;
+      --secondary: #ff9800;
+      --secondary-deep: #e07c00;
+      --accent: #2196f3;
+      --accent-deep: #1976d2;
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --surface-raised: #ffffff;
+      --line: #e0e0e0;
+      --text: #333333;
+      --text-soft: #666666;
+      --shadow: 210 10% 15%;
+      --heading: 'Montserrat', -apple-system, 'Segoe UI', sans-serif;
+      --body: 'Open Sans', -apple-system, 'Segoe UI', sans-serif;
+      --ui: 'Lato', -apple-system, 'Segoe UI', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #66bb6a;
+        --primary-deep: #81c784;
+        --primary-tint: #1b2e1c;
+        --secondary: #ffa726;
+        --secondary-deep: #ffb74d;
+        --accent: #42a5f5;
+        --accent-deep: #64b5f6;
+        --bg: #1a1a1a;
+        --surface: #232323;
+        --surface-raised: #272727;
+        --line: #3a3a3a;
+        --text: #ededed;
+        --text-soft: #a8a8a8;
+        --shadow: 0 0% 0%;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --primary: #66bb6a;
+      --primary-deep: #81c784;
+      --primary-tint: #1b2e1c;
+      --secondary: #ffa726;
+      --secondary-deep: #ffb74d;
+      --accent: #42a5f5;
+      --accent-deep: #64b5f6;
+      --bg: #1a1a1a;
+      --surface: #232323;
+      --surface-raised: #272727;
+      --line: #3a3a3a;
+      --text: #ededed;
+      --text-soft: #a8a8a8;
+      --shadow: 0 0% 0%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .prose-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ---------- Nav ---------- */
+
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav.top .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    .brand .tag {
+      font-family: var(--ui);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      border-left: 1px solid var(--line);
+      padding-left: 10px;
+      margin-left: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .brand .tag {
+        display: none;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 0.92rem;
+      color: var(--text-soft);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary-deep);
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* ---------- Hero ---------- */
+
+    .hero {
+      padding: 76px 0 64px;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--secondary-deep);
+      background: color-mix(in srgb, var(--secondary) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent);
+      padding: 5px 12px 5px 10px;
+      border-radius: 100px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--secondary);
+    }
+
+    .slogan {
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--primary-deep);
+      margin: 0 0 14px;
+    }
+
+    .slogan .sep {
+      color: var(--line);
+      margin: 0 6px;
+    }
+
+    h1.headline {
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin: 0 0 22px;
+      max-width: 16ch;
+      text-wrap: balance;
+    }
+
+    h1.headline em {
+      font-style: normal;
+      color: var(--primary-deep);
+    }
+
+    .dek {
+      font-size: 1.2rem;
+      color: var(--text-soft);
+      max-width: 52ch;
+      margin: 0 0 36px;
+      text-wrap: pretty;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: 8px;
+      font-size: 0.96rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-deep);
+      box-shadow: 0 8px 20px -8px hsl(var(--shadow) / 0.5);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    /* ---------- Video ---------- */
+
+    .video-frame {
+      margin-top: 56px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 3px solid var(--surface);
+      box-shadow: 0 24px 60px -30px hsl(var(--shadow) / 0.45), 0 0 0 1px var(--line);
+      background: #000;
+      aspect-ratio: 16/9;
+      position: relative;
+    }
+
+    .video-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* ---------- Section scaffolding ---------- */
+
+    section {
+      padding: 84px 0;
+    }
+
+    .section-border-top {
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    .section-num {
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-deep);
+    }
+
+    h2.section-title {
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      letter-spacing: -0.01em;
+      margin: 6px 0 0;
+      text-wrap: balance;
+    }
+
+    .section-lede {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      max-width: 62ch;
+      margin: 0 0 40px;
+    }
+
+    /* ---------- Menu / features ---------- */
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .menu-item {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 18px;
+      align-items: start;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .menu-item .icon {
+      width: 30px;
+      height: 30px;
+      color: var(--secondary-deep);
+      margin-top: 2px;
+    }
+
+    .menu-item .icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .menu-item h3 {
+      font-size: 1.05rem;
+      font-weight: 650;
+      margin: 0 0 4px;
+    }
+
+    .menu-item p {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.96rem;
+      max-width: 56ch;
+    }
+
+    .menu-tag {
+      font-family: var(--ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+      padding: 4px 9px;
+      border-radius: 5px;
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .menu-tag.roadmap {
+      color: var(--text-soft);
+      background: transparent;
+      border-color: var(--line);
+    }
+
+    @media (max-width: 600px) {
+      .menu-item {
+        grid-template-columns: 26px 1fr;
+      }
+
+      .menu-tag {
+        grid-column: 2;
+        margin-top: 6px;
+        justify-self: start;
+      }
+    }
+
+    /* ---------- Stack / ingredients ---------- */
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 720px) {
+      .stack-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stack-cell {
+      background: var(--surface-raised);
+      padding: 26px 28px;
+    }
+
+    .stack-cell h4 {
+      font-family: var(--ui);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--secondary-deep);
+      margin: 0 0 14px;
+    }
+
+    .stack-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .stack-list li {
+      font-family: var(--ui);
+      font-size: 0.9rem;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      color: var(--text);
+    }
+
+    .stack-list .role {
+      color: var(--text-soft);
+      font-family: var(--body);
+      font-size: 0.86rem;
+    }
+
+    .stack-note {
+      margin-top: 40px;
+      padding: 20px 24px;
+      border-left: 3px solid var(--accent);
+      background: color-mix(in srgb, var(--accent) 7%, transparent);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.96rem;
+      color: var(--text-soft);
+    }
+
+    .stack-note strong {
+      color: var(--text);
+    }
+
+    /* ---------- Postmortem ---------- */
+
+    .tab {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 0;
+    }
+
+    .check {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 20px;
+      padding: 14px 28px;
+      border-bottom: 1px dashed var(--line);
+      font-family: var(--ui);
+      font-size: 0.92rem;
+    }
+
+    .check:last-of-type {
+      border-bottom: none;
+    }
+
+    .check .item {
+      color: var(--text-soft);
+    }
+
+    .check .cost {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .check.total {
+      padding-top: 20px;
+      border-top: 2px solid var(--text);
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .check.total .cost {
+      color: var(--accent);
+    }
+
+    .postmortem-copy {
+      margin-top: 40px;
+      font-size: 1.02rem;
+      color: var(--text-soft);
+    }
+
+    .postmortem-copy p {
+      margin: 0 0 18px;
+    }
+
+    .postmortem-copy strong {
+      color: var(--text);
+    }
+
+    /* ---------- Capture ---------- */
+
+    .capture-section {
+      background: var(--primary-deep);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 64px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .capture-section {
+        padding: 48px 24px;
+      }
+    }
+
+    .capture-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(600px 300px at 20% -10%, color-mix(in srgb, var(--secondary) 30%, transparent), transparent),
+        radial-gradient(500px 260px at 90% 110%, color-mix(in srgb, var(--accent) 24%, transparent), transparent);
+      pointer-events: none;
+    }
+
+    .capture-inner {
+      position: relative;
+    }
+
+    .capture-section .eyebrow {
+      background: color-mix(in srgb, #ffffff 18%, transparent);
+      border-color: color-mix(in srgb, #ffffff 35%, transparent);
+      color: #ffffff;
+    }
+
+    .capture-section .eyebrow .dot {
+      background: var(--secondary);
+    }
+
+    .capture-section h2 {
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+      margin: 22px 0 14px;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: #ffffff;
+    }
+
+    .capture-section .sub {
+      color: color-mix(in srgb, #ffffff 82%, transparent);
+      max-width: 46ch;
+      margin: 0 auto 36px;
+      font-size: 1.02rem;
+    }
+
+    .fine-print {
+      margin: 18px 0 0;
+      font-size: 0.82rem;
+      color: color-mix(in srgb, #ffffff 62%, transparent);
+    }
+
+    .fine-print a {
+      color: color-mix(in srgb, #ffffff 85%, transparent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .fine-print a:hover {
+      color: #ffffff;
+    }
+
+    .eo-form-shell {
+      max-width: 420px;
+      margin: 0 auto;
+      color: var(--text);
+    }
+
+    .eo-form-shell :is(input, button) {
+      font-family: var(--body);
+    }
+
+    /* ---------- Footer ---------- */
+
+    footer {
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--line);
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    footer a:hover {
+      color: var(--secondary-deep);
+    }
+  </style>
 </head>
+
 <body>
 
-<nav class="top">
-  <div class="wrap">
-    <a class="brand" href="#top">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M28 78C15 78 5 68.5 5 57C5 46.5 13 38 23.5 37C26 24 37.5 15 51 15C64 15 75 24 78 36.5C88.5 37.5 97 46 97 57C97 68.5 87 78 74 78H28Z" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>
-        <rect x="35" y="52" width="42" height="26" rx="3" fill="currentColor"/>
-        <rect x="31" y="47" width="50" height="8" rx="3" fill="currentColor"/>
-        <path d="M52 47C52 41 57 38 61 38" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-      </svg>
-      CookCloud
-      <span class="tag">Plan · Prep · Plate</span>
-    </a>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#stack">The Stack</a>
-      <a href="#closed">Why We Closed</a>
-      <a href="#reopen">Get Notified</a>
-    </div>
-  </div>
-</nav>
-
-<div id="top"></div>
-
-<header class="hero">
-  <div class="wrap">
-    <span class="eyebrow"><span class="dot"></span>Currently offline</span>
-    <p class="slogan">Plan <span class="sep">/</span> Prep <span class="sep">/</span> Plate</p>
-    <h1 class="headline">A recipe app that <em>actually shipped</em>. Revenue just never followed.</h1>
-    <p class="dek">CookCloud was a full meal-planning platform: search, import, plan, shop, track. The product worked. Getting people to pay for it never did, partly because I kept shipping new features instead of fixing that. So I pulled the plug. Here's the whole thing, unfiltered.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-primary" href="#reopen">Get notified if it comes back</a>
-      <a class="btn btn-ghost" href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/" target="_blank" rel="noopener">Read the original launch post →</a>
-    </div>
-
-    <div class="video-frame">
-      <iframe src="https://www.youtube-nocookie.com/embed/QflEnFHjIBc" title="CookCloud product demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-    </div>
-  </div>
-</header>
-
-<section id="features" class="section-border-top">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="section-num">Plan · Prep · Plate</div>
-        <h2 class="section-title">What actually shipped</h2>
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M28 78C15 78 5 68.5 5 57C5 46.5 13 38 23.5 37C26 24 37.5 15 51 15C64 15 75 24 78 36.5C88.5 37.5 97 46 97 57C97 68.5 87 78 74 78H28Z"
+            stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
+          <rect x="35" y="52" width="42" height="26" rx="3" fill="currentColor" />
+          <rect x="31" y="47" width="50" height="8" rx="3" fill="currentColor" />
+          <path d="M52 47C52 41 57 38 61 38" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+        </svg>
+        CookCloud
+        <span class="tag">Plan · Prep · Plate</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#stack">The Stack</a>
+        <a href="#closed">Why We Closed</a>
+        <a href="#reopen">Get Notified</a>
       </div>
     </div>
-    <p class="section-lede">This isn't a landing-page mockup. It's a working product people used, and everything marked <span style="font-family:var(--ui);font-weight:700;color:var(--primary-deep);">shipped</span> below ran in production.</p>
+  </nav>
 
-    <div class="menu">
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+  <div id="top"></div>
+
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow"><span class="dot"></span>Currently offline</span>
+      <p class="slogan">Plan <span class="sep">/</span> Prep <span class="sep">/</span> Plate</p>
+      <h1 class="headline">A recipe app that <em>actually shipped</em>. Revenue just never followed.</h1>
+      <p class="dek">CookCloud was a full meal-planning platform: search, import, plan, shop, track. The product worked.
+        Getting people to pay for it never did, partly because I kept shipping new features instead of fixing that. So I
+        pulled the plug. Here's the whole thing, unfiltered.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#reopen">Get notified if it comes back</a>
+        <a class="btn btn-ghost"
+          href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/"
+          target="_blank" rel="noopener">Read the original launch post →</a>
+      </div>
+
+      <div class="video-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/QflEnFHjIBc" title="CookCloud product demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </header>
+
+  <section id="features" class="section-border-top">
+    <div class="wrap">
+      <div class="section-head">
         <div>
-          <h3>Search by keyword or by ingredient</h3>
-          <p>Type in what's already in the fridge. Recipes come back ranked by how many of those ingredients you actually have, so it's not just matching a keyword to a title.</p>
+          <div class="section-num">Plan · Prep · Plate</div>
+          <h2 class="section-title">What actually shipped</h2>
         </div>
-        <span class="menu-tag">shipped</span>
       </div>
+      <p class="section-lede">This isn't a landing-page mockup. It's a working product people used, and everything
+        marked <span style="font-family:var(--ui);font-weight:700;color:var(--primary-deep);">shipped</span> below ran
+        in production.</p>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20l9-16H3l9 16z"/><path d="M12 4v16"/></svg></div>
-        <div>
-          <h3>Custom recipe creation and import</h3>
-          <p>Write your own recipes from scratch, or drop in a URL and CookCloud parses the page and structures it automatically.</p>
+      <div class="menu">
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg></div>
+          <div>
+            <h3>Search by keyword or by ingredient</h3>
+            <p>Type in what's already in the fridge. Recipes come back ranked by how many of those ingredients you
+              actually have, so it's not just matching a keyword to a title.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4M16 2v4"/></svg></div>
-        <div>
-          <h3>Personalized meal planning</h3>
-          <p>Drag recipes onto a weekly calendar. That plan is the source for the grocery list, the nutrition totals, and the prep schedule, so everything downstream stays in sync.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 20l9-16H3l9 16z" />
+              <path d="M12 4v16" />
+            </svg></div>
+          <div>
+            <h3>Custom recipe creation and import</h3>
+            <p>Write your own recipes from scratch, or drop in a URL and CookCloud parses the page and structures it
+              automatically.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2l1 6h10l1-6"/><path d="M4 10h16l-1.5 10a2 2 0 01-2 2h-9a2 2 0 01-2-2L4 10z"/></svg></div>
-        <div>
-          <h3>Automated grocery lists</h3>
-          <p>Every ingredient across a week's meal plan gets deduplicated and quantity-summed into a single shopping list. No manual tallying.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M3 10h18" />
+              <path d="M8 2v4M16 2v4" />
+            </svg></div>
+          <div>
+            <h3>Personalized meal planning</h3>
+            <p>Drag recipes onto a weekly calendar. That plan is the source for the grocery list, the nutrition totals,
+              and the prep schedule, so everything downstream stays in sync.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 8h14M5 16h14"/></svg></div>
-        <div>
-          <h3>Ingredient substitutions</h3>
-          <p>Out of buttermilk, or allergic to shellfish? A dedicated substitution engine matched individual components, down to specific ingredients, with real alternatives.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M6 2l1 6h10l1-6" />
+              <path d="M4 10h16l-1.5 10a2 2 0 01-2 2h-9a2 2 0 01-2-2L4 10z" />
+            </svg></div>
+          <div>
+            <h3>Automated grocery lists</h3>
+            <p>Every ingredient across a week's meal plan gets deduplicated and quantity-summed into a single shopping
+              list. No manual tallying.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12l6 6L21 6"/></svg></div>
-        <div>
-          <h3>Nutritional tracking</h3>
-          <p>Calories and macros roll up per recipe and per day, straight from the plan you already built. There's no separate food diary to keep up with.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 3v18M5 8h14M5 16h14" />
+            </svg></div>
+          <div>
+            <h3>Ingredient substitutions</h3>
+            <p>Out of buttermilk, or allergic to shellfish? A dedicated substitution engine matched individual
+              components, down to specific ingredients, with real alternatives.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16"/><circle cx="8" cy="7" r=".8" fill="currentColor" stroke="none"/></svg></div>
-        <div>
-          <h3>Meal Prep Mode</h3>
-          <p>A focused, step-by-step cooking interface, built for a phone propped up on the counter rather than a browser tab you have to keep scrolling.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M3 12l6 6L21 6" />
+            </svg></div>
+          <div>
+            <h3>Nutritional tracking</h3>
+            <p>Calories and macros roll up per recipe and per day, straight from the plan you already built. There's no
+              separate food diary to keep up with.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag">shipped</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 16.4 5.7 21l2.3-7.2-6-4.6h7.6z"/></svg></div>
-        <div>
-          <h3>Smart recommendations</h3>
-          <p>A recommendations engine got scaffolded to suggest recipes based on what you'd cooked, saved, and searched before. It stalled in early development and never made it to users.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="4" y="4" width="16" height="16" rx="2" />
+              <path d="M4 10h16" />
+              <circle cx="8" cy="7" r=".8" fill="currentColor" stroke="none" />
+            </svg></div>
+          <div>
+            <h3>Meal Prep Mode</h3>
+            <p>A focused, step-by-step cooking interface, built for a phone propped up on the counter rather than a
+              browser tab you have to keep scrolling.</p>
+          </div>
+          <span class="menu-tag">shipped</span>
         </div>
-        <span class="menu-tag roadmap">roadmap</span>
-      </div>
 
-      <div class="menu-item">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="15" height="13" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></div>
-        <div>
-          <h3>Pantry tracking, barcode scanning, delivery hookups</h3>
-          <p>Scoped, prioritized on a public roadmap, voted on by real users. I kept starting new work before finishing what was already sitting there, so none of it got built.</p>
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 16.4 5.7 21l2.3-7.2-6-4.6h7.6z" />
+            </svg></div>
+          <div>
+            <h3>Smart recommendations</h3>
+            <p>A recommendations engine got scaffolded to suggest recipes based on what you'd cooked, saved, and
+              searched before. It stalled in early development and never made it to users.</p>
+          </div>
+          <span class="menu-tag roadmap">roadmap</span>
         </div>
-        <span class="menu-tag roadmap">roadmap</span>
+
+        <div class="menu-item">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="7" width="15" height="13" rx="2" />
+              <path d="M16 10l5-3v10l-5-3" />
+            </svg></div>
+          <div>
+            <h3>Pantry tracking, barcode scanning, delivery hookups</h3>
+            <p>Scoped, prioritized on a public roadmap, voted on by real users. I kept starting new work before
+              finishing what was already sitting there, so none of it got built.</p>
+          </div>
+          <span class="menu-tag roadmap">roadmap</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="stack" class="section-border-top">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="section-num">Under the Hood</div>
-        <h2 class="section-title">What ran underneath it</h2>
-      </div>
-    </div>
-    <p class="section-lede">The <a href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/" target="_blank" rel="noopener">launch post</a> covered the AI coding tools I built it with. This is the part it didn't cover: what actually had to run, all day, every day, for CookCloud to stay up.</p>
-
-    <div class="stack-grid">
-      <div class="stack-cell">
-        <h4>Application</h4>
-        <ul class="stack-list">
-          <li><span>Django 5.2</span><span class="role">— core framework, Python 3.13</span></li>
-          <li><span>Django Channels + Daphne</span><span class="role">— async/WebSocket layer</span></li>
-          <li><span>Django CMS</span><span class="role">— blog &amp; marketing pages</span></li>
-          <li><span>django-allauth</span><span class="role">— auth, MFA, social login</span></li>
-          <li><span>DRF + drf-spectacular</span><span class="role">— API + docs</span></li>
-        </ul>
-      </div>
-      <div class="stack-cell">
-        <h4>Data &amp; jobs</h4>
-        <ul class="stack-list">
-          <li><span>PostgreSQL</span><span class="role">— primary datastore</span></li>
-          <li><span>Redis</span><span class="role">— cache, broker, sessions</span></li>
-          <li><span>Celery + Celery Beat</span><span class="role">— background &amp; scheduled jobs</span></li>
-          <li><span>django-storages + S3</span><span class="role">— media &amp; image storage</span></li>
-        </ul>
-      </div>
-      <div class="stack-cell">
-        <h4>Intelligence</h4>
-        <ul class="stack-list">
-          <li><span>OpenAI API</span><span class="role">— recipe parsing &amp; suggestions</span></li>
-          <li><span>Spoonacular API</span><span class="role">— nutrition &amp; ingredient data</span></li>
-          <li><span>AbacusAI</span><span class="role">— recommendation modeling</span></li>
-          <li><span>yt-dlp</span><span class="role">— recipe import from video</span></li>
-        </ul>
-      </div>
-      <div class="stack-cell">
-        <h4>Money &amp; ops</h4>
-        <ul class="stack-list">
-          <li><span>Stripe + dj-stripe</span><span class="role">— subscription billing</span></li>
-          <li><span>Mailgun</span><span class="role">— transactional email</span></li>
-          <li><span>Sentry</span><span class="role">— error tracking</span></li>
-          <li><span>GeoIP2 + django-health-check</span><span class="role">— access &amp; uptime</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="stack-note">
-      <strong>This is a real SaaS stack, not a script.</strong> Postgres, Redis, a Celery worker, a Celery Beat scheduler, and an async web process all had to run continuously, at the same time, just for the app to function. Five always-on processes before a single user loads a page. It's the right architecture for what CookCloud does, and it meant the app needed paying subscribers to make sense financially (more on that below).
-    </div>
-  </div>
-</section>
-
-<section id="closed" class="section-border-top">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="section-num">The Honest Part</div>
-        <h2 class="section-title">Why the kitchen closed</h2>
-      </div>
-    </div>
-    <p class="section-lede">Revenue never really got off the ground. Five always-on services and three metered APIs need paying subscribers behind them, and I spent my time building instead of finding those subscribers.</p>
-
-    <div class="tab">
-      <div class="check"><span class="item">Paying subscribers at shutdown</span><span class="cost">zero</span></div>
-      <div class="check"><span class="item">Always-on services required to run the app</span><span class="cost">five</span></div>
-      <div class="check"><span class="item">Shipped features (search, import, planning, lists, subs, nutrition, prep mode)</span><span class="cost">seven</span></div>
-      <div class="check"><span class="item">Of those, polished enough to convert a visitor into a subscriber</span><span class="cost">few</span></div>
-      <div class="check"><span class="item">Weeks spent marketing what already existed</span><span class="cost">not enough</span></div>
-      <div class="check total"><span class="item">A real product that never found paying users</span><span class="cost">the actual problem</span></div>
-    </div>
-
-    <div class="postmortem-copy">
-      <p>CookCloud never found paying users. That's the plain version, and everything else is a more comfortable way of saying it. A recipe app running on Postgres, Redis, Celery, and metered AI APIs needs subscribers behind it to make sense, and revenue just never got there.</p>
-      <p><strong>The mistake wasn't the tech. It was where I spent my time.</strong> Every time a core feature felt slightly rough, my instinct was to build the next feature instead of polishing the one already in front of me. Search, meal planning, and grocery lists all deserved more attention than they got before I moved on to ingredient substitutions, then started scaffolding a recommendations engine nobody had asked to use yet. Telling people CookCloud existed barely happened at all.</p>
-      <p>So I took it down rather than let it quietly bleed money every month. The code still works, and the idea still holds up — but a relaunch means doing the boring part first: pick two or three features, make them genuinely great, and actually tell people about it before starting anything new.</p>
-    </div>
-  </div>
-</section>
-
-<section id="reopen" class="section-border-top">
-  <div class="wrap">
-    <div class="capture-section">
-      <div class="capture-inner">
-        <span class="eyebrow"><span class="dot"></span>Reservation list, not a mailing list</span>
-        <h2>If enough people want it back, I'll bring it back.</h2>
-        <p class="sub">One email, no spam. If this list gets big enough to justify the hosting bill, you'll be the first to know CookCloud is cooking again.</p>
-        <div class="eo-form-shell">
-          <script async src="https://eomail5.com/form/9d387a28-fb9a-11ef-a931-876870f6ede7.js" data-form="9d387a28-fb9a-11ef-a931-876870f6ede7"></script>
+  <section id="stack" class="section-border-top">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-num">Under the Hood</div>
+          <h2 class="section-title">What ran underneath it</h2>
         </div>
-        <p class="fine-print">Used only to notify you about CookCloud. Unsubscribe anytime. <a href="privacy.html">Privacy policy</a></p>
+      </div>
+      <p class="section-lede">The <a
+          href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/"
+          target="_blank" rel="noopener">launch post</a> covered the AI coding tools I built it with. This is the part
+        it didn't cover: what actually had to run, all day, every day, for CookCloud to stay up.</p>
+
+      <div class="stack-grid">
+        <div class="stack-cell">
+          <h4>Application</h4>
+          <ul class="stack-list">
+            <li><span>Django 5.2</span><span class="role">— core framework, Python 3.13</span></li>
+            <li><span>Django Channels + Daphne</span><span class="role">— async/WebSocket layer</span></li>
+            <li><span>Django CMS</span><span class="role">— blog &amp; marketing pages</span></li>
+            <li><span>django-allauth</span><span class="role">— auth, MFA, social login</span></li>
+            <li><span>DRF + drf-spectacular</span><span class="role">— API + docs</span></li>
+          </ul>
+        </div>
+        <div class="stack-cell">
+          <h4>Data &amp; jobs</h4>
+          <ul class="stack-list">
+            <li><span>PostgreSQL</span><span class="role">— primary datastore</span></li>
+            <li><span>Redis</span><span class="role">— cache, broker, sessions</span></li>
+            <li><span>Celery + Celery Beat</span><span class="role">— background &amp; scheduled jobs</span></li>
+            <li><span>django-storages + S3</span><span class="role">— media &amp; image storage</span></li>
+          </ul>
+        </div>
+        <div class="stack-cell">
+          <h4>Intelligence</h4>
+          <ul class="stack-list">
+            <li><span>OpenAI API</span><span class="role">— recipe parsing &amp; suggestions</span></li>
+            <li><span>Spoonacular API</span><span class="role">— nutrition &amp; ingredient data</span></li>
+            <li><span>AbacusAI</span><span class="role">— recommendation modeling</span></li>
+            <li><span>yt-dlp</span><span class="role">— recipe import from video</span></li>
+          </ul>
+        </div>
+        <div class="stack-cell">
+          <h4>Money &amp; ops</h4>
+          <ul class="stack-list">
+            <li><span>Stripe + dj-stripe</span><span class="role">— subscription billing</span></li>
+            <li><span>Mailgun</span><span class="role">— transactional email</span></li>
+            <li><span>Sentry</span><span class="role">— error tracking</span></li>
+            <li><span>GeoIP2 + django-health-check</span><span class="role">— access &amp; uptime</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stack-note">
+        <strong>This is a real SaaS stack, not a script.</strong> Postgres, Redis, a Celery worker, a Celery Beat
+        scheduler, and an async web process all had to run continuously, at the same time, just for the app to function.
+        Five always-on processes before a single user loads a page. It's the right architecture for what CookCloud does,
+        and it meant the app needed paying subscribers to make sense financially (more on that below).
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="wrap">
-    <span>CookCloud was built and shut down by <a href="https://bryanheadrick.com" target="_blank" rel="noopener">Bryan Headrick</a>.</span>
-    <span>
-      <a href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/" target="_blank" rel="noopener">Read the launch story →</a>
-      &nbsp;·&nbsp;
-      <a href="privacy.html">Privacy</a>
-    </span>
-  </div>
-</footer>
+  <section id="closed" class="section-border-top">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-num">The Honest Part</div>
+          <h2 class="section-title">Why the kitchen closed</h2>
+        </div>
+      </div>
+      <p class="section-lede">Revenue never really got off the ground. Five always-on services and three metered APIs
+        need paying subscribers behind them, and I spent my time building instead of finding those subscribers.</p>
 
-<!--
-  Analytics: GoatCounter (free, cookieless, no consent banner required).
-  Sign up at https://www.goatcounter.com, pick a site code, then replace
-  YOUR-CODE below with it (e.g. cookcloud.goatcounter.com -> data-goatcounter
-  becomes https://cookcloud.goatcounter.com/count).
--->
-<script data-goatcounter="https://YOUR-CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+      <div class="tab">
+        <div class="check"><span class="item">Paying subscribers at shutdown</span><span class="cost">zero</span></div>
+        <div class="check"><span class="item">Always-on services required to run the app</span><span
+            class="cost">five</span></div>
+        <div class="check"><span class="item">Shipped features (search, import, planning, lists, subs, nutrition, prep
+            mode)</span><span class="cost">seven</span></div>
+        <div class="check"><span class="item">Of those, polished enough to convert a visitor into a
+            subscriber</span><span class="cost">few</span></div>
+        <div class="check"><span class="item">Weeks spent marketing what already existed</span><span class="cost">not
+            enough</span></div>
+        <div class="check total"><span class="item">A real product that never found paying users</span><span
+            class="cost">the actual problem</span></div>
+      </div>
+
+      <div class="postmortem-copy">
+        <p>CookCloud never found paying users. That's the plain version, and everything else is a more comfortable way
+          of saying it. A recipe app running on Postgres, Redis, Celery, and metered AI APIs needs subscribers behind it
+          to make sense, and revenue just never got there.</p>
+        <p><strong>The mistake wasn't the tech. It was where I spent my time.</strong> Every time a core feature felt
+          slightly rough, my instinct was to build the next feature instead of polishing the one already in front of me.
+          Search, meal planning, and grocery lists all deserved more attention than they got before I moved on to
+          ingredient substitutions, then started scaffolding a recommendations engine nobody had asked to use yet.
+          Telling people CookCloud existed barely happened at all.</p>
+        <p>So I took it down rather than let it quietly bleed money every month. The code still works, and the idea
+          still holds up — but a relaunch means doing the boring part first: pick two or three features, make them
+          genuinely great, and actually tell people about it before starting anything new.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reopen" class="section-border-top">
+    <div class="wrap">
+      <div class="capture-section">
+        <div class="capture-inner">
+          <span class="eyebrow"><span class="dot"></span>Reservation list, not a mailing list</span>
+          <h2>If enough people want it back, I'll bring it back.</h2>
+          <p class="sub">One email, no spam. If this list gets big enough to justify the hosting bill, you'll be the
+            first to know CookCloud is cooking again.</p>
+          <div class="eo-form-shell">
+            <script async src="https://eomail5.com/form/9d387a28-fb9a-11ef-a931-876870f6ede7.js"
+              data-form="9d387a28-fb9a-11ef-a931-876870f6ede7"></script>
+          </div>
+          <p class="fine-print">Used only to notify you about CookCloud. Unsubscribe anytime. <a
+              href="privacy.html">Privacy policy</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>CookCloud was built and shut down by <a href="https://bryanheadrick.com" target="_blank"
+          rel="noopener">Bryan Headrick</a>.</span>
+      <span>
+        <a href="https://bryanheadrick.com/ai-powered-culinary-alchemy-transmuting-recipe-torment-into-cookcloud-magic/"
+          target="_blank" rel="noopener">Read the launch story →</a>
+        &nbsp;·&nbsp;
+        <a href="privacy.html">Privacy</a>
+      </span>
+    </div>
+  </footer>
+
+  <script data-goatcounter="https://cookcloud.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
+
 </html>
