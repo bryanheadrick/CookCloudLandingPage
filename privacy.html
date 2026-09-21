@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CookCloud — Privacy Policy</title>
+  <meta name="description"
+    content="What CookCloud collects when you join the relaunch notification list, what it's used for, and how to get it deleted.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&family=Lato:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4caf50;
+      --primary-deep: #388e3c;
+      --secondary: #ff9800;
+      --secondary-deep: #e07c00;
+      --accent: #2196f3;
+      --accent-deep: #1976d2;
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --line: #e0e0e0;
+      --text: #333333;
+      --text-soft: #666666;
+      --heading: 'Montserrat', -apple-system, 'Segoe UI', sans-serif;
+      --body: 'Open Sans', -apple-system, 'Segoe UI', sans-serif;
+      --ui: 'Lato', -apple-system, 'Segoe UI', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #66bb6a;
+        --primary-deep: #81c784;
+        --secondary: #ffa726;
+        --secondary-deep: #ffb74d;
+        --accent: #42a5f5;
+        --accent-deep: #64b5f6;
+        --bg: #1a1a1a;
+        --surface: #232323;
+        --line: #3a3a3a;
+        --text: #ededed;
+        --text-soft: #a8a8a8;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --primary: #66bb6a;
+      --primary-deep: #81c784;
+      --secondary: #ffa726;
+      --secondary-deep: #ffb74d;
+      --accent: #42a5f5;
+      --accent-deep: #64b5f6;
+      --bg: #1a1a1a;
+      --surface: #232323;
+      --line: #3a3a3a;
+      --text: #ededed;
+      --text-soft: #a8a8a8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    a {
+      color: var(--accent-deep);
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .prose-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav.top .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    .brand .tag {
+      font-family: var(--ui);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      border-left: 1px solid var(--line);
+      padding-left: 10px;
+      margin-left: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .brand .tag {
+        display: none;
+      }
+    }
+
+    .nav-back {
+      font-family: var(--ui);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      color: var(--text-soft);
+    }
+
+    .nav-back:hover {
+      color: var(--primary-deep);
+    }
+
+    main {
+      padding: 64px 0 80px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary-deep);
+      background: color-mix(in srgb, var(--primary) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin: 0 0 10px;
+      text-wrap: balance;
+    }
+
+    .updated {
+      font-family: var(--ui);
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin: 0 0 44px;
+    }
+
+    .policy h2 {
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      margin: 40px 0 12px;
+    }
+
+    .policy h2:first-of-type {
+      margin-top: 0;
+    }
+
+    .policy p {
+      margin: 0 0 16px;
+      color: var(--text);
+    }
+
+    .policy ul {
+      margin: 0 0 16px;
+      padding-left: 22px;
+    }
+
+    .policy li {
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .policy strong {
+      color: var(--text);
+    }
+
+    .contact-box {
+      margin-top: 44px;
+      padding: 22px 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 0.96rem;
+    }
+
+    .contact-box p {
+      margin: 0;
+    }
+
+    footer {
+      padding: 40px 0 56px;
+      border-top: 1px solid var(--line);
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      color: inherit;
+    }
+
+    footer a:hover {
+      color: var(--secondary-deep);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M28 78C15 78 5 68.5 5 57C5 46.5 13 38 23.5 37C26 24 37.5 15 51 15C64 15 75 24 78 36.5C88.5 37.5 97 46 97 57C97 68.5 87 78 74 78H28Z"
+            stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
+          <rect x="35" y="52" width="42" height="26" rx="3" fill="currentColor" />
+          <rect x="31" y="47" width="50" height="8" rx="3" fill="currentColor" />
+          <path d="M52 47C52 41 57 38 61 38" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+        </svg>
+        CookCloud
+        <span class="tag">Plan · Prep · Plate</span>
+      </a>
+      <a class="nav-back" href="index.html">← Back to the page</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="prose-wrap">
+      <span class="eyebrow">Privacy</span>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated September 21, 2026</p>
+
+      <div class="policy">
+        <h2>What this page collects</h2>
+        <p>If you sign up for the relaunch notification list, the only thing collected is your email address, submitted
+          through an embedded EmailOctopus form. That's it. This page doesn't have accounts, doesn't track what you
+          click beyond basic anonymous visit counts, and doesn't sell or share your email with anyone.</p>
+
+        <h2>What it's used for</h2>
+        <p>Your email is used for exactly one thing: to let you know if CookCloud relaunches. It won't be used for
+          anything else, and it won't be handed off to a third party for marketing.</p>
+
+        <h2>Where it's stored</h2>
+        <p>Signups are stored and sent through <a href="https://emailoctopus.com/privacy" target="_blank"
+            rel="noopener">EmailOctopus</a>, a third-party email service. Their own privacy policy governs how they
+          handle and secure that data on their end.</p>
+
+        <h2>Anonymous analytics</h2>
+        <p>This page uses <a href="https://www.goatcounter.com" target="_blank" rel="noopener">GoatCounter</a> for basic
+          visit counts — pageviews and referrers, nothing tied to an individual. GoatCounter doesn't use cookies and
+          doesn't collect personal data, which is why there's no cookie banner on this page.</p>
+
+        <h2>Your options</h2>
+        <ul>
+          <li>Every email sent to this list includes an unsubscribe link that removes you immediately.</li>
+          <li>You can request your email be deleted at any time, unsubscribe link or not — just reach out (see below).
+          </li>
+          <li>Nothing here is sold, rented, or shared with advertisers.</li>
+        </ul>
+
+        <div class="contact-box">
+          <p><strong>Questions or a deletion request?</strong> Email <a
+              href="mailto:sales@bryanheadrick.com">sales@bryanheadrick.com</a>, or reach out through <a
+              href="https://bryanheadrick.com" target="_blank" rel="noopener">bryanheadrick.com</a>.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>CookCloud was built and shut down by <a href="https://bryanheadrick.com" target="_blank"
+          rel="noopener">Bryan Headrick</a>.</span>
+      <span><a href="index.html">← Back to CookCloud</a></span>
+    </div>
+  </footer>
+
+  <script data-goatcounter="https://cookcloud.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+
+</html>
